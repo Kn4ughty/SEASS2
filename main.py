@@ -1,5 +1,7 @@
-import auth
 
+from db import db
+
+print(db.getTables())
 
 def main():
     print("Hello World")
