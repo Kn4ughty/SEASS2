@@ -34,8 +34,10 @@ def what_the_sigma():
 def create_user_ui(database: db):
     name = input("Name: ")
     password = getpass("Password: ")
+    u = User()
+    u.manual_init(database.cur, name, password)
 
-    u = User.manual_init(database.cur, name, password)
+    
 
     user.add_user_to_db(u, database)
 

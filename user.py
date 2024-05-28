@@ -23,7 +23,10 @@ class User:
     password_salt: str
     creation_time: float
 
-    def manual_init(cur: sqlite3.Cursor, name: str, password: str): # TODO. Give better name
+    def __init__(self):
+        ...
+
+    def manual_init(self, cur: sqlite3.Cursor, name: str, password: str): # TODO. Give better name
         UUID = uuid.uuid4()
 
         user_list = get_users_in_db(cur)
