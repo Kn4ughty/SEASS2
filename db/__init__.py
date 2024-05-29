@@ -11,12 +11,14 @@ def setPath(path: str):
 
 
 class db(object):
+    cur: sqlite3.Cursor
+    
     def __init__(self, path):
         self.con = sqlite3.connect(path)
         self.cur = self.con.cursor()
 
         self.requiredTables = {
-            "users": "uuid, name, password_hash, password_salt",
+            "users": "uuid, name, password_hash, password_salt, creation_date",
         }
 
         self.initTables(self.getTables())
@@ -24,25 +26,26 @@ class db(object):
         print(self.getTables())
     
 
-    def initTables(self, tables):
+    def initTables(self, tables: tuple):
         if tables is not tuple:
             # LOG
             for key in self.requiredTables:
+                if key in tables:
+                    continue
                 print(f"{key}({self.requiredTables[key]})")
                 self.cur.execute(f"CREATE TABLE {key}({self.requiredTables[key]})")
 
 
-    def getTables(self):
+    def getTables(self) -> tuple:
         result = self.cur.execute("SELECT name FROM sqlite_master")
         return result.fetchone()
-    
+
+
     def sendCommand(self, command: str) -> sqlite3.Cursor:
         """
         ASUMES COMAND IS SAFE
         """
         result = self.cur.execute(command)
         return result
-
-a = db(path)
 
 
