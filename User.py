@@ -15,30 +15,32 @@ logger.debug('submodule message')
 @dataclass
 class User:
     uuid: str
+    name: str
     password_hash: str
     password_salt: str
     creation_date: float
 
 
-def add_user_to_db(user: User, cursor: sqlite3.Cursor) -> Exception | None:
+def add_user_to_db(user: User, database: db) -> Exception | None:
     logger.info(f"Adding user ({user}) to database")
 
-    all_users = get_users_in_db(cursor)
+    all_users = get_users_in_db(database.cur)
 
-    if user in all_users:
-        logger.info("User is already found in DB")
-        raise Exception
+    for instance in all_users:
+        if instance.uuid == user.uuid:
+            logger.info("User is already found in DB")
+            raise IOError("User was already found in the database!!!!!!!!!!!!")
 
 
-    logger.log()
-    cursor.execute(""" 
+    logger.debug("Executing SQL")
+    database.cur.execute(""" 
     INSERT INTO "users"("uuid","name","password_hash","password_salt", creation_date)
     VALUES( 
-        %(uuid)s, 
-        %(name)s, 
-        %(password_hash)s, 
-        %(passoword_salt)s, 
-        %(creation_date)f)""",
+        :uuid,
+        :name,
+        :password_hash,
+        :password_salt,
+        :creation_date)""",
     {
         'uuid': user.uuid,
         'name': user.name, 
@@ -47,21 +49,23 @@ def add_user_to_db(user: User, cursor: sqlite3.Cursor) -> Exception | None:
         'creation_date': user.creation_date
     })
 
+    database.con.commit()
+
 
 def get_users_in_db(cursor: sqlite3.Cursor) -> List[User]:
     logger.debug(f"getting users in db")
 
     result = cursor.execute("SELECT * FROM users LIMIT 100").fetchall()
 
-    logger.debug(f"Users found in DB raw result: {result}")
+    logger.debug(f"Users found in DB. raw result: {result}")
 
     user_list = []
 
     for user_tuple in result:
-        u = User(user_tuple[0], user_tuple[1], user_tuple[2], user_tuple[3])
+        u = User(user_tuple[0], user_tuple[1], user_tuple[2], user_tuple[3], user_tuple[4])
         user_list.append(u)
     
-    logger.debug(f"Users found in DB turned to User type: {user_list}")
+    logger.debug(f"Users found in DB. turned to User type: {user_list}")
 
 
     return user_list

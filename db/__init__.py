@@ -1,10 +1,14 @@
 import sqlite3
 
+import logging
+
+logger = logging.getLogger('root')
+logger.debug('submodule message')
+
 
 global path
-
-
 path = "db.db"
+
 
 def setPath(path: str):
     path = path
@@ -17,23 +21,27 @@ class db(object):
         self.con = sqlite3.connect(path)
         self.cur = self.con.cursor()
 
-        self.requiredTables = {
+        requiredTables = {
             "users": "uuid, name, password_hash, password_salt, creation_date",
         }
 
-        self.initTables(self.getTables())
+        self.initTables(requiredTables)
 
         print(self.getTables())
     
 
-    def initTables(self, tables: tuple):
-        if tables is not tuple:
-            # LOG
-            for key in self.requiredTables:
-                if key in tables:
-                    continue
-                print(f"{key}({self.requiredTables[key]})")
-                self.cur.execute(f"CREATE TABLE {key}({self.requiredTables[key]})")
+    def initTables(self, requiredTables: dict):
+        tables = self.getTables()
+        print(type(tables))
+
+        if type(tables) is tuple:
+            logger.info("Tables found assuming all required exist")
+            return
+
+        for key in requiredTables:
+            print("DOING SHIT")
+            print(f"{key}({requiredTables[key]})")
+            self.cur.execute(f"CREATE TABLE {key}({requiredTables[key]})")
 
 
     def getTables(self) -> tuple:

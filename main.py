@@ -8,16 +8,17 @@ logger.debug('main message')
 
 database = db("db.db")
 
-
-
 cursor = database.cur
+
 
 def main():
     print("Hello World")
     #print(User.get_users_in_db(cursor))
-    u = User("UUID", "SOME HASH", "SALT", 1234.5)
-    print(user.add_user_to_db(u, cursor))
+    u = User("UUIDPoop", "naeme", "SOME HASH", "SALT", 1234.5)
+    print(user.add_user_to_db(u, database))
+    print(user.get_users_in_db(cursor))
 
 
 if __name__ == "__main__":
     main()
+    database.con.close()
