@@ -29,7 +29,7 @@ def add_user_to_db(user: User, database: db) -> Exception | None:
     for instance in all_users:
         if instance.uuid == user.uuid:
             logger.info("User is already found in DB")
-            raise IOError("User was already found in the database!!!!!!!!!!!!")
+            raise IOError("User was already found in the database!")
 
 
     logger.debug("Executing SQL")

@@ -28,10 +28,10 @@ def get_data_path() -> Path:
             os_path = os.getenv("HOME")
             if os_path is None:
                 logger.warn("The $HOME variable was not found. What even the heck.")
-                os_path = "~/.local/share"
+                os_path = "~"
             os_path += "/.local/share"
     else:
-        logging.error("Unknown os. Cant continue.")
+        logging.error("Unknown os. Can't continue.")
 
     logger.debug(f"os_path set to {os_path}")
 
