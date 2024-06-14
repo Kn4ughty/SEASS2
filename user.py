@@ -2,11 +2,14 @@ from dataclasses import dataclass
 from typing import List
 import time
 import sqlite3
+import uuid
+
+import bcrypt
 
 from db import db # mmm confusing
-#from db import db
 
 import logging
+
 
 logger = logging.getLogger('root')
 logger.debug('submodule message')
@@ -18,7 +21,43 @@ class User:
     name: str
     password_hash: str
     password_salt: str
-    creation_date: float
+    creation_time: float
+
+    def manual_init(cur: sqlite3.Cursor, name: str, password: str): # TODO. Give better name
+        UUID = uuid.uuid4()
+
+        user_list = get_users_in_db(cur)
+        for db_user in user_list:
+            if db_user.uuid == str(UUID):
+                print("Wow you just got the same UUID as someone else.")
+                print("This is actually insane")
+                print("why did i even write this error message this will never happen")
+                print("Anyway here are the errors")
+                logger.info("duplicate UUID??")
+                UUID = uuid.uuid4()
+
+
+        password_bytes = password.encode('utf-8')
+
+        salt = bcrypt.gensalt()
+        salt_str = salt.decode('utf-8')
+
+        hashed = bcrypt.hashpw(password_bytes, salt)
+        hashed_str = hashed.decode('utf-8')
+
+
+        creation_time = time.time()
+
+
+        return User(str(UUID), str(name), hashed_str, salt_str, creation_time)
+
+
+
+
+    def safe_str(self) -> str:
+        out = (f"Name: {self.name}, Creation Time: {time.ctime(self.creation_time)}")
+        return out
+
 
 
 def add_user_to_db(user: User, database: db) -> Exception | None:
@@ -34,19 +73,19 @@ def add_user_to_db(user: User, database: db) -> Exception | None:
 
     logger.debug("Executing SQL")
     database.cur.execute(""" 
-    INSERT INTO "users"("uuid","name","password_hash","password_salt", creation_date)
+    INSERT INTO "users"("uuid","name","password_hash","password_salt", creation_time)
     VALUES( 
         :uuid,
         :name,
         :password_hash,
         :password_salt,
-        :creation_date)""",
+        :creation_time)""",
     {
         'uuid': user.uuid,
         'name': user.name, 
         'password_hash': user.password_hash,
         'password_salt': user.password_salt,
-        'creation_date': user.creation_date
+        'creation_time': user.creation_time
     })
 
     database.con.commit()
@@ -71,9 +110,12 @@ def get_users_in_db(cursor: sqlite3.Cursor) -> List[User]:
     return user_list
 
 
-database = db("db.db")
+def is_user_in_db(U: User, database: db):
+    user_list = get_users_in_db(database.cur)
 
-get_users_in_db(database.cur)
+    return True if U in user_list else False
 
 
+b = User("UUID", "A name", "SOME PASSWORD HASH", "SALT", 1234.5)
+print(b.safe_str())
 

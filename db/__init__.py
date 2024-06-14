@@ -22,7 +22,7 @@ class db(object):
         self.cur = self.con.cursor()
 
         requiredTables = {
-            "users": "uuid, name, password_hash, password_salt, creation_date",
+            "users": "uuid, name, password_hash, password_salt, creation_time",
         }
 
         self.initTables(requiredTables)

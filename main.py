@@ -1,6 +1,8 @@
 from db import db
-import User as user # mmm
-from User import User
+import user as user # mmm
+from user import User
+
+import user_tui
 
 import ui
 
@@ -13,7 +15,11 @@ database = db("db.db")
 cursor = database.cur
 
 
+
+
 def main():
+    user_tui.looping_ui(database)
+
     u = User("UUID", "A name", "SOME PASSWORD HASH", "SALT", 1234.5)
  
     user.add_user_to_db(u, database)
