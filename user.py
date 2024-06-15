@@ -23,43 +23,21 @@ class User:
     password_salt: str
     creation_time: float
 
-    def __init__(self):
-        ...
-
-    def manual_init(self, cur: sqlite3.Cursor, name: str, password: str): # TODO. Give better name
-        UUID = uuid.uuid4()
-
-        user_list = get_users_in_db(cur)
-        for db_user in user_list:
-            if db_user.uuid == str(UUID):
-                print("Wow you just got the same UUID as someone else.")
-                print("This is actually insane")
-                print("why did i even write this error message this will never happen")
-                print("Anyway here are the errors")
-                logger.info("duplicate UUID??")
-                UUID = uuid.uuid4()
-
-
-        password_bytes = password.encode('utf-8')
-
-        salt = bcrypt.gensalt()
-        salt_str = salt.decode('utf-8')
-
-        hashed = bcrypt.hashpw(password_bytes, salt)
-        hashed_str = hashed.decode('utf-8')
-
-
-        creation_time = time.time()
-
-
-        return User(str(UUID), str(name), hashed_str, salt_str, creation_time)
-
-
-
 
     def safe_str(self) -> str:
         out = (f"Name: {self.name}, Creation Time: {time.ctime(self.creation_time)}")
         return out
+    
+    def login(self, password: str) -> bool:
+        logger.debug("Logging in user")
+        
+        password_bytes = password.encode('utf-8')
+        hashed_input = bcrypt.hashpw(password_bytes, self.password_salt.encode('utf-8'))
+        
+        logger.debug(f"Hashed input: {hashed_input}")
+
+        status = hashed_input == self.password_hash.encode('utf-8')
+        print(status)
 
 
 
@@ -117,6 +95,38 @@ def is_user_in_db(U: User, database: db):
     user_list = get_users_in_db(database.cur)
 
     return True if U in user_list else False
+
+
+
+def manual_init(cur: sqlite3.Cursor, name: str, password: str): # TODO. Give better name
+    UUID = uuid.uuid4()
+
+    user_list = get_users_in_db(cur)
+    for db_user in user_list:
+        if db_user.uuid == str(UUID):
+            print("Wow you just got the same UUID as someone else.")
+            print("This is actually insane")
+            print("why did i even write this error message this will never happen")
+            print("Anyway here are the errors")
+            logger.info("duplicate UUID??")
+            UUID = uuid.uuid4()
+
+
+    password_bytes = password.encode('utf-8')
+
+    salt = bcrypt.gensalt()
+    salt_str = salt.decode('utf-8')
+
+    hashed = bcrypt.hashpw(password_bytes, salt)
+    hashed_str = hashed.decode('utf-8')
+
+
+    creation_time = time.time()
+
+
+    return User(str(UUID), str(name), hashed_str, salt_str, creation_time)
+
+
 
 
 b = User("UUID", "A name", "SOME PASSWORD HASH", "SALT", 1234.5)
