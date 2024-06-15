@@ -14,6 +14,8 @@ import logging
 logger = logging.getLogger('root')
 logger.debug('submodule message')
 
+class DuplicateUserError(Exception):
+    pass
 
 @dataclass
 class User:
@@ -25,7 +27,7 @@ class User:
 
 
     def safe_str(self) -> str:
-        out = (f"Name: {self.name}, Creation Time: {time.ctime(self.creation_time)}")
+        out = (f"Name: {self.name:<20} Creation Time: {time.ctime(self.creation_time):<12}")
         return out
     
     def login(self, password: str) -> bool:
@@ -37,7 +39,8 @@ class User:
         logger.debug(f"Hashed input: {hashed_input}")
 
         status = hashed_input == self.password_hash.encode('utf-8')
-        print(status)
+        logger.debug(f"Status: {status}")
+        return status
 
 
 
@@ -49,7 +52,7 @@ def add_user_to_db(user: User, database: db) -> Exception | None:
     for instance in all_users:
         if instance.uuid == user.uuid:
             logger.info("User is already found in DB")
-            raise IOError("User was already found in the database!")
+            raise DuplicateUserError("User is already in DB")
 
 
     logger.debug("Executing SQL")

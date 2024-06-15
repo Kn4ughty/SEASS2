@@ -18,13 +18,8 @@ cursor = database.cur
 
 
 def main():
-    user_tui.looping_ui(database)
+    selected_user = user_tui.looping_ui(database)
 
-    u = User("UUID", "A name", "SOME PASSWORD HASH", "SALT", 1234.5)
- 
-    user.add_user_to_db(u, database)
-
-    print(user.get_users_in_db(cursor))
 
 
 if __name__ == "__main__":

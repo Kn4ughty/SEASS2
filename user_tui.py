@@ -9,11 +9,10 @@ from user import User
 from db import db
 
 
-def get_user_list_to_str(database: db) -> str:
-    user_list = user.get_users_in_db(database.cur)
+def get_user_list_to_str(user_list: List[User]) -> str:
     out = ""
-    for u in user_list:
-        out += str(u.safe_str() + "\n")
+    for i in range(len(user_list)):
+        out += (f"\n#{i+1}. {user_list[i].safe_str()}")
     return out
 
 
@@ -51,27 +50,28 @@ def select_user_ui(database: db) -> User:
     user_list = user.get_users_in_db(database.cur)
 
     user_list_str = get_user_list_to_list_str(user_list)
-
+    print("")
     for entry in user_list_str:
         print(entry)
+    print("")
 
-    selected_num = input("Please select user number: ")
+    selected_num = input("Please enter user number: ")
     try:
         selected_user = user_list_str[int(selected_num) - 1]
         return user_list[int(selected_num) - 1]
     except:
         print("Invalid user number")
-        return None
+        raise ValueError("Invalid user number")
 
 
-def login_prompt(u: User):
-    print(f"Loggin in as user {u.name}")
+def login_prompt(u: User) -> bool:
+    print(f"Loggin in as user \"{u.name}\"")
     password = getpass("Password: ")
     return u.login(password)
 
 
 def looping_ui(database: db) -> User:
-    help_text = "User selection UI\n\
+    help_text = "Available commands:\n\
     p   - Print existing user\n\
     a   - Add new user\n\
     l   - Login\n\
@@ -89,14 +89,27 @@ def looping_ui(database: db) -> User:
         match i:
             case "p":
 
-                print(get_user_list_to_str(user.get_users_in_db(database.cur)))
+                user_list = get_user_list_to_str(user.get_users_in_db(database.cur))
+                if user_list == "":
+                    print("No users found in database")
+                    print("Consider creating one with the \"a\" command")
+                else:
+                    print(user_list)
 
             case "a":
                 create_user_ui(database)
             
             case "l":
-                selected_user = select_user_ui(database)
-                login_prompt(selected_user)
+                try:
+                    selected_user = select_user_ui(database)
+                except ValueError:
+                    continue
+
+                is_logged_in = login_prompt(selected_user)
+                if is_logged_in:
+                    return selected_user
+                else:
+                    print("Login failed")
 
             case "?":
                 print(help_text)
