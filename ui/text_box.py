@@ -21,8 +21,8 @@ default_font_colour = pg.Color(num_colour_list[0], num_colour_list[1], num_colou
 
 
 class TextBox(Element):
-    """A text display ui element
-    Displays text
+    """A text typing box.
+    You can type text into it.
     """
     text_colour: pg.Color
     font: str
@@ -41,11 +41,26 @@ class TextBox(Element):
         self.font_obj = font_obj
         self.text_colour = text_colour
   
-
         self.manager = ti.TextInputManager(initial=text_content, validator=validator)
         self.visualiser = ti.TextInputVisualizer(self.manager, font_obj, font_color=text_colour)
+
+        self.selected = False
     
+
     def update(self, events) -> pg.Surface:
-        self.visualiser.update(events)
+        if self.selected:
+            self.visualiser.update(events)
+        
         return self.visualiser.surface
+    
+
+    @property
+    def selected(self) -> bool:
+        return self.selected
+    
+
+    @selected.setter
+    def selected(self, value: bool):
+        self.selected = value
+        
 
