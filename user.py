@@ -10,7 +10,6 @@ from db import db # mmm confusing
 
 import logging
 
-
 logger = logging.getLogger('root')
 logger.debug('submodule message')
 

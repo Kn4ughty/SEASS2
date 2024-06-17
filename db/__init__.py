@@ -26,20 +26,16 @@ class db(object):
         }
 
         self.initTables(requiredTables)
-
-        print(self.getTables())
     
 
     def initTables(self, requiredTables: dict):
         tables = self.getTables()
-        print(type(tables))
 
         if type(tables) is tuple:
             logger.info("Tables found assuming all required exist")
             return
 
         for key in requiredTables:
-            print("DOING SHIT")
             print(f"{key}({requiredTables[key]})")
             self.cur.execute(f"CREATE TABLE {key}({requiredTables[key]})")
 

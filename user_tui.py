@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import List
 from getpass import getpass
 import sqlite3
+import sys
 
 import user
 from user import User
@@ -70,9 +71,15 @@ def login_prompt(u: User) -> bool:
     return u.login(password)
 
 
+def parse_args(args: List[str]) -> str:
+    args.pop(0) # Remove file name
+    
+    return args[0]
+
+
 def looping_ui(database: db) -> User:
     help_text = "Available commands:\n\
-    p   - Print existing user\n\
+    ls   - List existing users\n\
     a   - Add new user\n\
     l   - Login\n\
     ?|h - Print this help menu\n\
@@ -81,13 +88,18 @@ def looping_ui(database: db) -> User:
     getting_input = True
 
     print(help_text)
+    args = sys.argv
+    print(len(args))
 
     while getting_input:
-
-        i = input("$: ")
+        
+        if len(args) <= 1:
+            i = input("$: ")
+        else:
+            i = parse_args(args)
 
         match i:
-            case "p":
+            case "ls":
 
                 user_list = get_user_list_to_str(user.get_users_in_db(database.cur))
                 if user_list == "":
@@ -122,4 +134,5 @@ def looping_ui(database: db) -> User:
 
             case _:
                 print("Unknown command. Type \"?\" for list of commands.")
+
 

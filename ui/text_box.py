@@ -1,13 +1,14 @@
 import pygame as pg
 import configparser
+import pygame_textinput as ti
 
-from element import Element
+from ui.element import Element
 
 import logging
 logger = logging.getLogger('root')
 
 config = configparser.ConfigParser()
- 
+
 config.read('config.ini')
 
 default_font = config.get('ui', 'default_font')
@@ -19,7 +20,7 @@ for num in colour_list:
 default_font_colour = pg.Color(num_colour_list[0], num_colour_list[1], num_colour_list[2])
 
 
-class Text(Element):
+class TextBox(Element):
     """A text display ui element
     Displays text
     """
@@ -29,16 +30,22 @@ class Text(Element):
 
 
     def __init__(self, 
-        element: Element,
-        text_content: str = "",
-        font_size: int = None,
-        font: str = default_font,
+        rect: pg.Rect,
+        font_obj: pg.font.Font,
         text_colour: pg.Color = pg.Color(0, 0, 0),
-        place_holder_text: str = ""):
+        text_content: str = "",
+        validator=lambda x: True):
         
-        self.element = Element(element)
+        super().__init__(rect)
         
-        self.font_size = font_size
-        self.font = default_font
+        self.font_obj = font_obj
         self.text_colour = text_colour
-        self.place_holder_text = place_holder_text
+  
+
+        self.manager = ti.TextInputManager(initial=text_content, validator=validator)
+        self.visualiser = ti.TextInputVisualizer(self.manager, font_obj, font_color=text_colour)
+    
+    def update(self, events) -> pg.Surface:
+        self.visualiser.update(events)
+        return self.visualiser.surface
+
