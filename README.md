@@ -6,13 +6,11 @@ Archery!! 🏹🎯
 - [ ] Automated testing + logs
 
 ## Auth
-- [ ] Hash+salt auth. 
-- [ ] Facial recognition? :)
-
+- [X] Hash+salt auth. 
 
 ## UI
 - [ ] Rewrite my UI library to be cleaner
-- [ ] Text entry box is musthave.
+- [ ] Text entry box is must have.
 - [ ] Table element?
     - [ ] 2d list of elements?
 - [ ] Must be performant 
@@ -20,7 +18,7 @@ Archery!! 🏹🎯
 
 
 ## Data
-- [ ] stored in SQLite
+- [x] stored in SQLite
 
 
 ### Optional

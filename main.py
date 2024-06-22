@@ -40,10 +40,11 @@ cursor = database.cur
 
 ui_elements = []
 
-text_box = ui.text_box.TextBox((10, 10, 200, 50), font)
+text_box = ui.text_box.TextEntry((10, 10, 200, 50), font, validator=lambda x: x.isdigit() or x == "")
+text_box.selected = True
 ui_elements.append(text_box)
 
-WINDOW = pg.display.set_mode((1000, 200))
+WINDOW = pg.display.set_mode((window_width, window_height))
 CLOCK = pg.time.Clock()
 
 pg.key.set_repeat(200, 25)
@@ -54,17 +55,25 @@ def main():
     while True:
         WINDOW.fill((225, 225, 225))
 
+
         events = pg.event.get()
 
         for element in ui_elements:
-            if type(element) == ui.text_box.TextBox:
+            if type(element) == ui.text_box.TextEntry:
                 WINDOW.blit(element.update(events), element.rect)
         
 
         for event in events:
-                if event.type == pg.QUIT:
-                    pg.quit()
-                    quit()
+            if event.type == pg.QUIT:
+                pg.quit()
+                quit()
+            # If tab pressed
+            if event.type == pg.KEYDOWN and event.key == pg.K_TAB:
+                for element in ui_elements:
+                    if element.selected:
+                        element.selected = False
+                    else:
+                        element.selected = True
         
         pg.display.update()
         CLOCK.tick(30)
