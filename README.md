@@ -3,19 +3,13 @@ Archery!! 🏹🎯
 
 # Project requirments
 
-- [ ] Automated testing + logs
-
 ## Auth
 - [X] Hash+salt auth. 
 
 ## UI
-- [ ] Rewrite my UI library to be cleaner
-- [ ] Text entry box is must have.
-- [ ] Table element?
-    - [ ] 2d list of elements?
-- [ ] Must be performant 
-- [ ] Easy to develop
-
+- [x] Rewrite my UI library to be cleaner
+- [x] Text entry box is must have.
+- [x] 2d list of elements?
 
 ## Data
 - [x] stored in SQLite
