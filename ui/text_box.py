@@ -46,7 +46,7 @@ class TextEntry(Element):
 
         self._selected = False
         self._surface: pg.Surface = pg.Surface((self.rect.width, self.rect.height))
-    
+
 
     def update(self, events) -> pg.Surface:
         if self._selected:
@@ -56,7 +56,7 @@ class TextEntry(Element):
         print(self.manager.value)
         
         return self._surface
-    
+
     def _render(self):
 
         if self._selected:
@@ -71,10 +71,8 @@ class TextEntry(Element):
     @property
     def selected(self) -> bool:
         return self._selected
-    
+
 
     @selected.setter
     def selected(self, value: bool):
         self._selected = value
-        
-

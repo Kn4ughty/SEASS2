@@ -44,13 +44,13 @@ text_box = ui.text_box.TextEntry((10, 10, 200, 50), font, validator=lambda x: x.
 text_box.selected = True
 ui_elements.append(text_box)
 
-WINDOW = pg.display.set_mode((window_width, window_height))
 CLOCK = pg.time.Clock()
 
 pg.key.set_repeat(200, 25)
 
 def main():
-    #selected_user = user_tui.looping_ui(database)
+    selected_user = user_tui.looping_ui(database)
+    WINDOW = pg.display.set_mode((window_width, window_height))
 
     while True:
         WINDOW.fill((225, 225, 225))

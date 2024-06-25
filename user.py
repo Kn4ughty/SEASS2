@@ -11,7 +11,7 @@ from db import db # mmm confusing
 import logging
 
 logger = logging.getLogger('root')
-logger.debug('submodule message')
+logger.debug('submodule message')   
 
 class DuplicateUserError(Exception):
     pass
@@ -28,7 +28,7 @@ class User:
     def safe_str(self) -> str:
         out = (f"Name: {self.name:<20} Creation Time: {time.ctime(self.creation_time):<12}")
         return out
-    
+
     def login(self, password: str) -> bool:
         logger.debug("Logging in user")
         
@@ -40,7 +40,6 @@ class User:
         status = hashed_input == self.password_hash.encode('utf-8')
         logger.debug(f"Status: {status}")
         return status
-
 
 
 def add_user_to_db(user: User, database: db) -> Exception | None:
@@ -86,7 +85,7 @@ def get_users_in_db(cursor: sqlite3.Cursor) -> List[User]:
     for user_tuple in result:
         u = User(user_tuple[0], user_tuple[1], user_tuple[2], user_tuple[3], user_tuple[4])
         user_list.append(u)
-    
+
     logger.debug(f"Users found in DB. turned to User type: {user_list}")
 
 
@@ -99,7 +98,6 @@ def is_user_in_db(U: User, database: db):
     return True if U in user_list else False
 
 
-
 def manual_init(cur: sqlite3.Cursor, name: str, password: str): # TODO. Give better name
     UUID = uuid.uuid4()
 
@@ -108,7 +106,7 @@ def manual_init(cur: sqlite3.Cursor, name: str, password: str): # TODO. Give bet
         if db_user.uuid == str(UUID):
             print("Wow you just got the same UUID as someone else.")
             print("This is actually insane")
-            print("why did i even write this error message this will never happen")
+            print("why did i even write this logic to check, this message this will never happen")
             print("Anyway here are the errors")
             logger.info("duplicate UUID??")
             UUID = uuid.uuid4()
@@ -129,8 +127,5 @@ def manual_init(cur: sqlite3.Cursor, name: str, password: str): # TODO. Give bet
     return User(str(UUID), str(name), hashed_str, salt_str, creation_time)
 
 
-
-
 b = User("UUID", "A name", "SOME PASSWORD HASH", "SALT", 1234.5)
 print(b.safe_str())
-
