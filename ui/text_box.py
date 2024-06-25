@@ -50,21 +50,23 @@ class TextEntry(Element):
 
     def update(self, events) -> pg.Surface:
         if self._selected:
+            
             self.visualiser.update(events)
 
         self._render()
-        print(self.manager.value)
         
         return self._surface
 
     def _render(self):
+        color = pg.Color(255, 255, 255)
 
         if self._selected:
             self.visualiser.cursor_visible = True
+            color = pg.Color(color.r - 100, color.g - 100, color.b - 100)
         else:
             self.visualiser.cursor_visible = False
 
-        self._surface.fill(pg.Color(255, 255, 255))
+        self._surface.fill(color)
         self._surface.blit(self.visualiser.surface, (0, 0))
 
 
