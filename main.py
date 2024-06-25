@@ -28,6 +28,10 @@ for num in colour_list:
     num_colour_list.append(int(num))
 default_font_colour = pg.Color(num_colour_list[0], num_colour_list[1], num_colour_list[2])
 
+end_amount = int(config.get('game', 'ends'))
+shots_per_end = int(config.get('game', 'shots_per_end'))
+
+
 pg.init()
 
 font = pg.font.SysFont(default_font, 40)
@@ -40,11 +44,10 @@ cursor = database.cur
 
 ui_elements = []
 
-ROWS = 10
-COLLUMS = 6
 
-for r in range(ROWS):
-    for c in range(COLLUMS):
+
+for r in range(end_amount):
+    for c in range(shots_per_end):
         box = ui.text_box.TextEntry((20 + c * 53, 100 + r * 50, 50, 25), font, validator=lambda x: x.isdigit() or x == "")
         box.selected = False
         ui_elements.append(box)
