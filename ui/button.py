@@ -4,6 +4,8 @@ import configparser
 from ui.element import Element
 from ui.text_display import TextDisplay
 
+import config_utils
+
 import logging
 logger = logging.getLogger('root')
 
@@ -11,13 +13,9 @@ config = configparser.ConfigParser()
 
 config.read('config.ini')
 
-default_font_colour = config.get('ui', 'default_font_colour')
+default_font_colour = config_utils.colour_str_to_colour(config.get('ui', 'default_font_colour'))
+default_background_colour = config_utils.colour_str_to_colour(config.get('ui', 'default_background_colour'))
 
-colour_list = default_font_colour.split(", ")
-num_colour_list = []
-for num in colour_list:
-    num_colour_list.append(int(num))
-default_font_colour = pg.Color(num_colour_list[0], num_colour_list[1], num_colour_list[2])
 
 
 class Button(Element):
@@ -32,7 +30,7 @@ class Button(Element):
         rect: pg.Rect,
         font_obj: pg.font.Font,
         action: callable,
-        background_colour: pg.Color = pg.Color(128, 128, 128), # TODO make this a config
+        background_colour: pg.Color = default_background_colour,
         text_colour: pg.Color = default_font_colour,
         text_content: str = ""):
 
