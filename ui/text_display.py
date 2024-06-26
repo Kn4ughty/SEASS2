@@ -11,7 +11,6 @@ config = configparser.ConfigParser()
 
 config.read('config.ini')
 
-default_font = config.get('ui', 'default_font')
 default_font_colour = config.get('ui', 'default_font_colour')
 colour_list = default_font_colour.split(", ")
 num_colour_list = []
@@ -24,10 +23,18 @@ class TextDisplay(Element):
 
     def __init__(rect: pg.Rect,
         font_obj: pg.font.Font,
-        text_colour: pg.Color = pg.Color(0, 0, 0),
+        text_colour: pg.Color = default_font_colour,
         text_content: str = ""):
         
         super().__init__(pg.Rect(rect))
         
         self.font_obj = font_obj
         self.text_colour = text_colour
+    
+    def update(self):
+        self.render()
+
+    
+    def render(self) -> pg.Surface:
+        surface = self.font_obj.render(self.text_content, True, self.text_colour)
+        return surface
