@@ -1,6 +1,7 @@
 import pygame as pg
 import os
 from typing import List
+import time
 
 from db import db
 import user as user # mmm
@@ -85,21 +86,6 @@ def find_elements_of_type_in_list(elements: list, ty: type) -> list:
     return out
 
 
-def get_scores_from_list(elements: List, rows: int, collumns: int) -> List[List]:
-    scores = []
-    if rows * collumns != len(elements):
-        raise ValueError("Error getting scores from list. Length of list does not match rows and collumns")
-    
-    for i in range(rows):
-        scores.append([])
-        for j in range(collumns):
-            chosen = elements[i * collumns + j]
-            assert type(chosen) == ui.text_box.TextEntry 
-            scores[i].append(chosen.text_content)
-    
-    return scores
-
-
 def get_scores_from_ui_elements() -> List[int]:
     global ui_elements
     elements = ui_elements
@@ -112,7 +98,57 @@ def get_scores_from_ui_elements() -> List[int]:
 
     logger.debug(f"Getting scores from ui elements")
     text_elements = find_elements_of_type_in_list(elements, ui.text_box.TextEntry)
-    print(get_scores_from_list(text_elements, rows, collumns))
+
+    scores = []
+    if rows * collumns != len(text_elements):
+        raise ValueError("Error getting scores from list. Length of list does not match rows and collumns")
+    
+    for i in range(rows):
+        scores.append([])
+        for j in range(collumns):
+            chosen = elements[i * collumns + j]
+            assert type(chosen) == ui.text_box.TextEntry 
+            text = chosen.text_content
+            if text == "":
+                scores[i].append(0)
+            else:
+                scores[i].append(int(chosen.text_content))
+            
+    logger.debug(f"Scores extracted = {scores}")
+
+    csv = list_to_csv_str(scores)
+
+    s = time.strftime("%Y-%m-%d__%H:%M:%S", time.localtime())
+    print(s)
+    path = os.path.join("exported", f"{s}.csv")
+
+    try:
+        with open(path, "x") as f:
+            f.write(csv)
+    
+    except FileExistsError:
+        logger.warn("File already found. Perhapse you pressed submit in quick sucession.")
+
+
+
+
+def list_to_csv_str(lst: List) -> str:
+    out = ""
+    for row in lst:
+        line = ""
+        for j in range(len(row)):
+            item = row[j]
+
+            if j == len(row) - 1:
+                line += f"{str(item)}"
+            else:
+                line += f"{str(item)},"
+
+        out += f"{line}\n"
+
+    return out
+
+        
 
 
 def main():
