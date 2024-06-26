@@ -21,18 +21,19 @@ default_font_colour = pg.Color(num_colour_list[0], num_colour_list[1], num_colou
 
 class TextDisplay(Element):
 
-    def __init__(rect: pg.Rect,
+    def __init__(self, rect: pg.Rect,
         font_obj: pg.font.Font,
         text_colour: pg.Color = default_font_colour,
         text_content: str = ""):
         
-        super().__init__(pg.Rect(rect))
+        self.rect = rect
         
         self.font_obj = font_obj
         self.text_colour = text_colour
+        self.text_content = text_content
     
-    def update(self):
-        self.render()
+    def update(self) -> pg.Surface:
+        return self.render()
 
     
     def render(self) -> pg.Surface:

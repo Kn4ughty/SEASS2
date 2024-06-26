@@ -1,4 +1,5 @@
 import pygame as pg
+import os
 
 from db import db
 import user as user # mmm
@@ -22,6 +23,8 @@ window_height = int(config.get('general', 'window_height'))
 
 default_font = config.get('ui', 'default_font')
 default_font_colour = config.get('ui', 'default_font_colour')
+
+
 colour_list = default_font_colour.split(", ")
 num_colour_list = []
 for num in colour_list:
@@ -34,7 +37,7 @@ shots_per_end = int(config.get('game', 'shots_per_end'))
 
 pg.init()
 
-font = pg.font.SysFont(default_font, 40)
+font = pg.font.Font(os.path.join("font", default_font), 25)
 
 
 database = db("db.db")
@@ -60,6 +63,10 @@ def generate_score_grid(ends, shots_per_end) -> list[ui.element.Element]:
 
 def select_next_element(elements) -> None:
     for i in range(len(elements)):
+        try:
+            elements[i].selected
+        except AttributeError:
+            pass
         if elements[i].selected:
 
             elements[i].selected = False
@@ -82,10 +89,12 @@ def main():
 
     ui_elements[0].selected = True
 
+    ui_elements.append(ui.text_display.TextDisplay(pg.Rect(10, 10, 10, 10), font, text_content="Enter score into grid."))
+
     WINDOW = pg.display.set_mode((window_width, window_height))
 
     while True:
-        WINDOW.fill((0, 0, 0))
+        WINDOW.fill((128, 128, 128))
 
 
         events = pg.event.get()
@@ -102,6 +111,9 @@ def main():
         for element in ui_elements:
             if type(element) == ui.text_box.TextEntry:
                 WINDOW.blit(element.update(events), element.rect)
+            else:
+                print("ADAADSAD")
+                WINDOW.blit(element.update(), element.rect)
 
 
         pg.display.update()
