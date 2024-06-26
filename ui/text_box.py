@@ -4,6 +4,8 @@ import pygame_textinput as ti
 
 from ui.element import Element
 
+import config_utils
+
 import logging
 logger = logging.getLogger('root')
 
@@ -33,6 +35,8 @@ class TextEntry(Element):
         
         self.font_obj = font_obj
         self.text_colour = text_colour
+
+        self.text_content = text_content
   
         self.manager = ti.TextInputManager(initial=text_content, validator=validator)
         self.visualiser = ti.TextInputVisualizer(self.manager, font_obj, font_color=text_colour)
@@ -47,6 +51,8 @@ class TextEntry(Element):
             self.visualiser.update(events)
 
         self._render()
+
+        self.text_content = self.visualiser.value
         
         return self._surface
 

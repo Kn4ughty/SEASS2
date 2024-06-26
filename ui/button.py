@@ -41,6 +41,7 @@ class Button(Element):
     
     def update(self, mouse_pos, mouse_buttons) -> pg.Surface:
         if self.rect.collidepoint(mouse_pos) and mouse_buttons[0]:
+            print("Clicked")
             self.action()
 
         return self.render()
