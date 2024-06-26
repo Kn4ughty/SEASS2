@@ -1,6 +1,5 @@
 import pygame as pg
 import configparser
-import pygame_textinput as ti
 
 from ui.element import Element
 
@@ -12,6 +11,7 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 default_font_colour = config.get('ui', 'default_font_colour')
+
 colour_list = default_font_colour.split(", ")
 num_colour_list = []
 for num in colour_list:
@@ -21,12 +21,13 @@ default_font_colour = pg.Color(num_colour_list[0], num_colour_list[1], num_colou
 
 class TextDisplay(Element):
 
-    def __init__(self, rect: pg.Rect,
+    def __init__(self, 
+        rect: pg.Rect,
         font_obj: pg.font.Font,
         text_colour: pg.Color = default_font_colour,
         text_content: str = ""):
         
-        self.rect = rect
+        self.rect = rect # Abstraction is silly anyway. 
         
         self.font_obj = font_obj
         self.text_colour = text_colour

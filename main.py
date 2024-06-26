@@ -50,6 +50,8 @@ CLOCK = pg.time.Clock()
 
 pg.key.set_repeat(200, 25)
 
+def print_hello():
+    print("Hello")
 
 def generate_score_grid(ends, shots_per_end) -> list[ui.element.Element]:
     elements = []
@@ -80,7 +82,7 @@ def select_next_element(elements) -> None:
 
 
 def main():
-    selected_user = user_tui.looping_ui(database)
+    #selected_user = user_tui.looping_ui(database)
     
     ui_elements = []
 
@@ -90,6 +92,8 @@ def main():
     ui_elements[0].selected = True
 
     ui_elements.append(ui.text_display.TextDisplay(pg.Rect(10, 10, 10, 10), font, text_content="Enter score into grid."))
+
+    ui_elements.append(ui.button.Button(pg.Rect(10, 700, 100, 50), font, print_hello, text_content="Submit"))
 
     WINDOW = pg.display.set_mode((window_width, window_height))
 
@@ -107,12 +111,17 @@ def main():
             if event.type == pg.KEYDOWN and event.key == pg.K_TAB:
                 select_next_element(ui_elements)
 
+        mouse_pos = pg.mouse.get_pos()
+        mouse_just_released = pg.mouse.get_just_released()
         
         for element in ui_elements:
             if type(element) == ui.text_box.TextEntry:
                 WINDOW.blit(element.update(events), element.rect)
+
+            elif type(element) == ui.button.Button:
+                WINDOW.blit(element.update(mouse_pos, mouse_just_released), element.rect)
+
             else:
-                print("ADAADSAD")
                 WINDOW.blit(element.update(), element.rect)
 
 
