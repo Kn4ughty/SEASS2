@@ -150,7 +150,7 @@ def list_to_csv_str(lst: List) -> str:
 def main():
     selected_user = user_tui.looping_ui(database)
 
-    if selected_user.uuid != "adb0aa60-b969-4797-9598-fc74792fc9fe":
+    if selected_user.uuid != "ad1a0aba-24b0-45d5-bc47-f40f9f82e2e6":
         print("WRONG USER!!!\n"*5)
         print("You must log in as the admin to access the program!")
         exit()
