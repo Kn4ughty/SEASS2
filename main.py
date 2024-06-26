@@ -54,13 +54,13 @@ def generate_score_grid(ends, shots_per_end) -> list[ui.element.Element]:
     elements = []
     for r in range(ends):
         for c in range(shots_per_end):
-            box = ui.text_box.TextEntry((20 + c * 53, 100 + r * 50, 50, 25), font, validator=lambda x: x.isdigit() or x == "")
+            box = ui.text_box.TextEntry((20 + c * 53, 100 + r * 50, 50, 30), font, validator=lambda x: x.isdigit() or x == "")
             elements.append(box)
     
     return elements
 
 
-def select_next_element(elements) -> None:
+def select_next_element(elements, delta: int) -> None:
     for i in range(len(elements)):
         try:
             elements[i].selected
@@ -73,7 +73,7 @@ def select_next_element(elements) -> None:
             if i == len(elements) - 1:
                 elements[0].selected = True
             else:
-                elements[i + 1].selected = True
+                elements[i + delta].selected = True
 
             break
 
@@ -164,8 +164,10 @@ def main():
     ui_elements.append(ui.text_display.TextDisplay(pg.Rect(10, 10, 10, 10), font, text_content="Enter score into grid."))
 
     ui_elements.append(
-        ui.button.Button(pg.Rect(10, 700, 100, 50), 
-        font, get_scores_from_ui_elements, text_content="Submit"))
+        ui.button.Button(pg.Rect(10, 700, 200, 50), 
+        font, get_scores_from_ui_elements, text_content="Export data."))
+
+    print(ui_elements[-1].text_display_obj.text_content)
 
     WINDOW = pg.display.set_mode((window_width, window_height))
 
@@ -180,8 +182,10 @@ def main():
                 pg.quit()
                 quit()
             # If tab pressed
-            if event.type == pg.KEYDOWN and event.key == pg.K_TAB:
-                select_next_element(ui_elements)
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_TAB:
+                    select_next_element(ui_elements, 1)
+            
 
         mouse_pos = pg.mouse.get_pos()
         mouse_just_released = pg.mouse.get_just_released()
