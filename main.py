@@ -86,7 +86,7 @@ def find_elements_of_type_in_list(elements: list, ty: type) -> list:
     return out
 
 
-def get_scores_from_ui_elements() -> List[int]:
+def write_scores_from_ui_elements() -> None:
     global ui_elements
     elements = ui_elements
     
@@ -130,8 +130,6 @@ def get_scores_from_ui_elements() -> List[int]:
         logger.warn("File already found. Perhapse you pressed submit in quick sucession.")
 
 
-
-
 def list_to_csv_str(lst: List) -> str:
     out = ""
     for row in lst:
@@ -148,11 +146,15 @@ def list_to_csv_str(lst: List) -> str:
 
     return out
 
-        
-
 
 def main():
-    #selected_user = user_tui.looping_ui(database)
+    selected_user = user_tui.looping_ui(database)
+
+    if selected_user.uuid != "adb0aa60-b969-4797-9598-fc74792fc9fe":
+        print("WRONG USER!!!\n"*5)
+        print("You must log in as the admin to access the program!")
+        exit()
+
     global ui_elements
     ui_elements = []
 
@@ -161,11 +163,11 @@ def main():
 
     ui_elements[0].selected = True
 
-    ui_elements.append(ui.text_display.TextDisplay(pg.Rect(10, 10, 10, 10), font, text_content="Enter score into grid."))
+    ui_elements.append(ui.text_display.TextDisplay(pg.Rect(10, 10, 10, 10), font, text_content="Enter score into grid"))
 
     ui_elements.append(
         ui.button.Button(pg.Rect(10, 700, 200, 50), 
-        font, get_scores_from_ui_elements, text_content="Export data."))
+        font, write_scores_from_ui_elements, text_content="Export data"))
 
     print(ui_elements[-1].text_display_obj.text_content)
 

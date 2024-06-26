@@ -80,7 +80,7 @@ def parse_args(args: List[str]) -> str:
 def looping_ui(database: db) -> User:
     help_text = "Available commands:\n\
     ls   - List existing users\n\
-    a   - Add new user\n\
+    a   - Add new user (ONLY ADMIN USER CAN ACCESS PROGRAM) \n\
     l   - Login\n\
     ?|h - Print this help menu\n\
     q   - Quit program"

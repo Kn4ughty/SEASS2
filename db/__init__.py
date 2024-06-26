@@ -15,6 +15,7 @@ def setPath(path: str):
 
 
 class db(object):
+    con: sqlite3.Connection
     cur: sqlite3.Cursor
     
     def __init__(self, path):
@@ -43,13 +44,3 @@ class db(object):
     def getTables(self) -> tuple:
         result = self.cur.execute("SELECT name FROM sqlite_master")
         return result.fetchone()
-
-
-    def sendCommand(self, command: str) -> sqlite3.Cursor:
-        """
-        ASUMES COMAND IS SAFE
-        """
-        result = self.cur.execute(command)
-        return result
-
-

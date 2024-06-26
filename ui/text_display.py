@@ -3,7 +3,7 @@ import configparser
 
 from ui.element import Element
 
-import config_utils
+import config_util
 
 import logging
 logger = logging.getLogger('root')
