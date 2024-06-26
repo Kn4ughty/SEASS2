@@ -163,11 +163,11 @@ def main():
 
     ui_elements[0].selected = True
 
-    ui_elements.append(ui.text_display.TextDisplay(pg.Rect(10, 10, 10, 10), font, text_content="Enter score into grid"))
+    ui_elements.append(ui.text_display.TextDisplay(pg.Rect(10, 10, 10, 10), font, text_content="󱡁 Enter score into grid"))
 
     ui_elements.append(
         ui.button.Button(pg.Rect(10, 700, 200, 50), 
-        font, write_scores_from_ui_elements, text_content="Export data"))
+        font, write_scores_from_ui_elements, text_content="󰈇 Export data"))
 
     print(ui_elements[-1].text_display_obj.text_content)
 
