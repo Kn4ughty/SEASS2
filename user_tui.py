@@ -89,7 +89,6 @@ def looping_ui(database: db) -> User:
 
     print(help_text)
     args = sys.argv
-    print(len(args))
 
     while getting_input:
         
